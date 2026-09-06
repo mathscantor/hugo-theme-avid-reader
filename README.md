@@ -7,8 +7,8 @@ focus a spine to pick the book up; click to read the review as a blog post.
 - License: MIT
 - Hugo: `>= 0.146.0` (new template system)
 
-![screenshot](images/screenshot.png)
-
+![screenshot](https://raw.githubusercontent.com/mathscantor/hugo-theme-avid-reader/refs/heads/main/images/screenshot.png)
+![stats-example](https://raw.githubusercontent.com/mathscantor/hugo-theme-avid-reader/refs/heads/main/images/stats-example.png)
 ## Features
 
 - Home bookshelf of spine-out review volumes
