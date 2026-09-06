@@ -2,6 +2,8 @@
 
 A minimal Hugo theme for book reviews. Reviews live in a `/reviews/` section and appear as spine-out volumes on a wooden shelf. Hover or focus a spine to pick the book up; click to read the review as a blog post.
 
+![avid-reader-example-site](./images/screenshot.png)
+
 Requires **Hugo 0.146.0** or later (new template system).
 
 ## Preview this repository
