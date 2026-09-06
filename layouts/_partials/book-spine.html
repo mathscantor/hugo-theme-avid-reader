@@ -1,0 +1,46 @@
+{{- $pages := 280 -}}
+{{- with .Params.pages -}}
+  {{- if gt . 0 -}}
+    {{- $pages = int . -}}
+  {{- end -}}
+{{- end -}}
+{{- $width := div $pages 8 -}}
+{{- if lt $width 48 -}}{{- $width = 48 -}}{{- end -}}
+{{- if gt $width 88 -}}{{- $width = 88 -}}{{- end -}}
+{{- $palette := slice "#3d2415" "#1c3354" "#4a1f1f" "#1f3d32" "#5a3a16" "#2e2448" "#3d2f1a" "#4a2c40" "#2c3d1f" "#1a3333" -}}
+{{- $idx := int (math.Mod (float (len .Title)) (float (len $palette))) -}}
+{{- $color := index $palette $idx -}}
+{{- with .Params.spineColor -}}
+  {{- $color = . -}}
+{{- end -}}
+{{- $spineImage := "" -}}
+{{- with .Params.spineImage -}}
+  {{- with $.Resources.Get . -}}
+    {{- $spineImage = .RelPermalink -}}
+  {{- else -}}
+    {{- warnf "spineImage %q not found in %s" . $.Path -}}
+  {{- end -}}
+{{- end -}}
+{{- $author := .Params.bookAuthor | default "" -}}
+{{- $label := .Title -}}
+{{- with $author -}}
+  {{- $label = printf "%s by %s" $.Title . -}}
+{{- end -}}
+{{- $position := "vertical" -}}
+{{- with .Params.spinePosition -}}
+  {{- $candidate := lower . -}}
+  {{- if in (slice "vertical" "horizontal" "lean-left" "lean-right") $candidate -}}
+    {{- $position = $candidate -}}
+  {{- end -}}
+{{- end -}}
+<li
+  class="shelf__slot shelf__slot--{{ $position }}"
+  style="--spine-color: {{ $color }}; --spine-width: {{ $width }}px;{{ with $spineImage }} --spine-image: url('{{ . }}');{{ end }}"
+>
+  <a
+    class="book-spine book-spine--{{ $position }}"
+    href="{{ .RelPermalink }}"
+    title="{{ $label }}"
+    aria-label="{{ $label }}"
+  ></a>
+</li>

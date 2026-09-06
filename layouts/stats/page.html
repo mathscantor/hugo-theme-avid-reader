@@ -1,0 +1,78 @@
+{{ define "main" }}
+  {{- $reviews := slice -}}
+  {{- range where site.RegularPages "Section" "reviews" -}}
+    {{- $tags := slice -}}
+    {{- range .GetTerms "tags" -}}
+      {{- $tags = $tags | append .LinkTitle -}}
+    {{- end -}}
+    {{- $pageCount := 0 -}}
+    {{- with .Params.pages -}}
+      {{- $pageCount = int . -}}
+    {{- end -}}
+    {{- $rating := 0.0 -}}
+    {{- with .Params.rating -}}
+      {{- $rating = float . -}}
+    {{- end -}}
+    {{- if lt $rating 0 -}}{{- $rating = 0.0 -}}{{- end -}}
+    {{- if gt $rating 5 -}}{{- $rating = 5.0 -}}{{- end -}}
+    {{- $reread := partial "reread-value.html" .Params.reread -}}
+    {{- $reviews = $reviews | append (dict "title" .Title "date" (.Date.Format "2006-01-02") "tags" $tags "pages" $pageCount "rating" $rating "reread" $reread) -}}
+  {{- end -}}
+  <section class="stats">
+    <header class="stats__intro">
+      <h1>{{ .Title }}</h1>
+      {{ .Content }}
+      <p class="stats__summary" data-stats-summary aria-live="polite"></p>
+    </header>
+    <form class="stats__filters" data-stats-filters action="#">
+      <fieldset>
+        <legend>Time range</legend>
+        <div class="stats__presets">
+          <button type="button" data-range="1m" aria-pressed="false">Past month</button>
+          <button type="button" data-range="3m" aria-pressed="false">Past 3 months</button>
+          <button type="button" data-range="6m" aria-pressed="false">Past 6 months</button>
+          <button type="button" data-range="1y" aria-pressed="false">Past year</button>
+          <button type="button" data-range="all" aria-pressed="true">Full duration</button>
+          <button type="button" data-range="custom" aria-pressed="false">Custom</button>
+        </div>
+        <div class="stats__custom" data-stats-custom hidden>
+          <label>
+            From
+            <input type="date" data-stats-from>
+          </label>
+          <label>
+            To
+            <input type="date" data-stats-to>
+          </label>
+        </div>
+      </fieldset>
+    </form>
+    <div class="stats__charts">
+      <figure class="stats__chart">
+        <figcaption>Genres reviewed</figcaption>
+        <div class="stats__chart-body" data-stats-pie></div>
+      </figure>
+      <figure class="stats__chart">
+        <figcaption>Would reread</figcaption>
+        <div class="stats__chart-body" data-stats-reread></div>
+      </figure>
+      <figure class="stats__chart">
+        <figcaption>Books reviewed</figcaption>
+        <div class="stats__chart-body" data-stats-bars></div>
+      </figure>
+      <figure class="stats__chart">
+        <figcaption>Pages read</figcaption>
+        <div class="stats__chart-body" data-stats-line></div>
+      </figure>
+      <figure class="stats__chart stats__chart--wide">
+        <figcaption>Rating distribution</figcaption>
+        <div class="stats__chart-body" data-stats-ratings></div>
+      </figure>
+    </div>
+  </section>
+  <script type="application/json" id="stats-data">{{ $reviews | jsonify | safeJS }}</script>
+  {{ with resources.Get "js/stats.js" }}
+    {{ $js := . | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+  {{ end }}
+{{ end }}

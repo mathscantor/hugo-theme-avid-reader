@@ -1,0 +1,9 @@
+{{- $attribution := .Get "attribution" -}}
+<figure class="pullquote">
+  <blockquote>
+    {{ .Inner | .Page.RenderString }}
+  </blockquote>
+  {{- with $attribution -}}
+    <figcaption>{{ . }}</figcaption>
+  {{- end -}}
+</figure>

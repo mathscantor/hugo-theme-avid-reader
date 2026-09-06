@@ -1,0 +1,30 @@
+{{ with site.Menus.main }}
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      {{ range . }}
+        {{ if .HasChildren }}
+          <li class="site-nav__item site-nav__item--dropdown">
+            <details class="site-nav__dropdown">
+              <summary>{{ .Name }}</summary>
+              <ul>
+                {{ range .Children }}
+                  <li>
+                    {{ if .Params.style }}
+                      <button type="button" data-style-set="{{ .Params.style }}" aria-pressed="false">{{ .Name }}</button>
+                    {{ else }}
+                      <a href="{{ .URL }}"{{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }} aria-current="page"{{ end }}>{{ .Name }}</a>
+                    {{ end }}
+                  </li>
+                {{ end }}
+              </ul>
+            </details>
+          </li>
+        {{ else }}
+          <li>
+            <a href="{{ .URL }}"{{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }} aria-current="page"{{ end }}>{{ .Name }}</a>
+          </li>
+        {{ end }}
+      {{ end }}
+    </ul>
+  </nav>
+{{ end }}

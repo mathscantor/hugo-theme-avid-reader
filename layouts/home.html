@@ -1,0 +1,9 @@
+{{ define "main" }}
+  <section class="intro">
+    {{ with .Title }}
+      <h1>{{ . }}</h1>
+    {{ end }}
+    {{ .Content }}
+  </section>
+  {{ partial "shelf.html" (where site.RegularPages "Section" "reviews") }}
+{{ end }}

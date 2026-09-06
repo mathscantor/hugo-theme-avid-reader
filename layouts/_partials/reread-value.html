@@ -1,0 +1,14 @@
+{{- $reread := "no" -}}
+{{- with . -}}
+  {{- if eq . true -}}
+    {{- $reread = "yes" -}}
+  {{- else if eq . false -}}
+    {{- $reread = "no" -}}
+  {{- else -}}
+    {{- $value := lower (printf "%v" .) -}}
+    {{- if or (eq $value "yes") (eq $value "no") (eq $value "maybe") -}}
+      {{- $reread = $value -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $reread -}}

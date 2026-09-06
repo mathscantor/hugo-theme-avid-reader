@@ -1,0 +1,13 @@
+name = "Avid Reader"
+license = "MIT"
+licenselink = "https://github.com/mathscantor/hugo-theme-avid-reader/blob/main/LICENSE"
+description = "A minimal Hugo theme that shelves book reviews as spine-out volumes. Hover to pick a book up; click to read the review like a blog post."
+homepage = "https://github.com/mathscantor/hugo-theme-avid-reader"
+demosite = ""
+tags = ["blog", "books", "reviews", "minimal", "personal"]
+features = ["bookshelf", "spine-out books", "pick-up animation", "review posts", "shortcodes"]
+min_version = "0.146.0"
+
+[author]
+  name = "mathscantor"
+  homepage = "https://github.com/mathscantor"

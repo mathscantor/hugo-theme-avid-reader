@@ -1,0 +1,48 @@
+{{- $pages := . -}}
+{{- $size := 50 -}}
+{{- with page -}}
+  {{- with (.Paginate (slice)).PagerSize -}}
+    {{- if gt . 0 -}}
+      {{- $size = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $count := len $pages -}}
+{{- $pageCount := 0 -}}
+{{- if gt $count 0 -}}
+  {{- $pageCount = div (add $count (sub $size 1)) $size -}}
+{{- end -}}
+{{- if gt $count 0 -}}
+  <section class="shelf" aria-label="Bookshelf" data-shelf-pages="{{ $pageCount }}">
+    <div class="shelf__alcove">
+      <span class="shelf__gem shelf__gem--tl" aria-hidden="true"></span>
+      <span class="shelf__gem shelf__gem--tr" aria-hidden="true"></span>
+      <span class="shelf__gem shelf__gem--ml" aria-hidden="true"></span>
+      <span class="shelf__gem shelf__gem--mr" aria-hidden="true"></span>
+      <span class="shelf__gem shelf__gem--bl" aria-hidden="true"></span>
+      <span class="shelf__gem shelf__gem--br" aria-hidden="true"></span>
+      <div class="shelf__viewport">
+        <div class="shelf__camera">
+          {{- $rest := $pages -}}
+          {{- range seq $pageCount -}}
+            <ul class="shelf__books" data-shelf-page="{{ sub . 1 }}">
+              {{- range first $size $rest -}}
+                {{ .Render "spine" }}
+              {{- end -}}
+            </ul>
+            {{- $rest = after $size $rest -}}
+          {{- end -}}
+        </div>
+      </div>
+    </div>
+    {{- if gt $pageCount 1 -}}
+      <nav class="shelf__pager" aria-label="Bookshelf pages">
+        <button type="button" class="shelf__pager-btn" data-shelf-dir="-1" disabled>Previous</button>
+        <p class="shelf__pager-status" aria-live="polite">1 of {{ $pageCount }}</p>
+        <button type="button" class="shelf__pager-btn" data-shelf-dir="1">Next</button>
+      </nav>
+    {{- end -}}
+  </section>
+{{- else -}}
+  <p class="shelf-empty">The shelf is empty.</p>
+{{- end -}}

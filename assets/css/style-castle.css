@@ -1,0 +1,254 @@
+html[data-style="castle"] {
+  color-scheme: dark;
+  --stone-deep: #1a1d22;
+  --stone-mid: #2c3138;
+  --stone-light: #4a505a;
+  --mortar: #1f2328;
+  --paper: #1a1d22;
+  --ink: #ebe4d4;
+  --ink-muted: #b4ab9a;
+  --rule: #5a6270;
+  --gold: #e8d5a3;
+  --link: #e0c48a;
+  --glow: #4ea2ff;
+  --glow-soft: rgba(78, 162, 255, 0.35);
+}
+
+html[data-style="castle"] body {
+  background-color: var(--stone-deep);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(78, 162, 255, 0.16), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 8% 72%, rgba(78, 162, 255, 0.13), transparent 62%),
+    radial-gradient(ellipse 36% 30% at 92% 38%, rgba(78, 162, 255, 0.11), transparent 58%),
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 42%, rgba(10, 12, 16, 0.72) 100%),
+    var(--cobble-wall, none);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-size: auto, auto, auto, auto, 280px 160px;
+}
+
+html[data-style="castle"] a:hover {
+  color: var(--gold);
+}
+
+html[data-style="castle"] .site-header,
+html[data-style="castle"] .site-footer {
+  background:
+    linear-gradient(180deg, rgba(78, 162, 255, 0.08), transparent 48%),
+    rgba(14, 16, 20, 0.86);
+  border-color: rgba(78, 162, 255, 0.28);
+}
+
+html[data-style="castle"] .site-header {
+  border-bottom: 1px solid rgba(78, 162, 255, 0.3);
+  box-shadow: 0 1px 16px rgba(78, 162, 255, 0.12);
+}
+
+html[data-style="castle"] .site-footer {
+  border-top: 1px solid rgba(78, 162, 255, 0.3);
+  box-shadow: 0 -1px 16px rgba(78, 162, 255, 0.12);
+}
+
+html[data-style="castle"] .site-nav__dropdown > ul {
+  background: rgba(14, 16, 20, 0.96);
+  border: 1px solid rgba(78, 162, 255, 0.28);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+html[data-style="castle"] .shelf {
+  margin: 0.85rem 0 2rem;
+}
+
+html[data-style="castle"] .shelf__alcove {
+  padding: 1.25rem 1.15rem 1.15rem;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(78, 162, 255, 0.1), transparent 52%),
+    linear-gradient(180deg, rgba(10, 12, 16, 0.78), rgba(16, 18, 22, 0.58));
+  box-shadow:
+    inset 0 0 48px rgba(0, 0, 0, 0.62),
+    inset 0 0 28px rgba(78, 162, 255, 0.1),
+    0 0 0 2px rgba(78, 162, 255, 0.32),
+    0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+html[data-style="castle"] .shelf__alcove::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  z-index: -1;
+  background: var(--cobble-wall, var(--stone-mid));
+  background-size: 280px 160px;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 2px rgba(78, 162, 255, 0.18),
+    0 0 22px rgba(78, 162, 255, 0.14);
+}
+
+html[data-style="castle"] .shelf__gem {
+  position: absolute;
+  z-index: 2;
+  width: 0.85rem;
+  height: 0.7rem;
+  border-radius: 50% 40% 55% 45%;
+  background:
+    radial-gradient(circle at 35% 30%, #dff0ff, var(--glow) 42%, #163a62 78%);
+  box-shadow:
+    0 0 8px var(--glow),
+    0 0 18px var(--glow-soft),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  animation: gem-pulse 3.6s ease-in-out infinite;
+}
+
+html[data-style="castle"] .shelf__gem--tl {
+  top: 0.4rem;
+  left: 0.5rem;
+}
+
+html[data-style="castle"] .shelf__gem--tr {
+  top: 0.55rem;
+  right: 0.65rem;
+  width: 0.7rem;
+  height: 0.58rem;
+  animation-delay: -0.8s;
+}
+
+html[data-style="castle"] .shelf__gem--ml {
+  top: 42%;
+  left: 0.3rem;
+  width: 0.55rem;
+  height: 0.65rem;
+  animation-delay: -2.2s;
+}
+
+html[data-style="castle"] .shelf__gem--mr {
+  top: 36%;
+  right: 0.35rem;
+  width: 0.6rem;
+  height: 0.52rem;
+  animation-delay: -2.8s;
+}
+
+html[data-style="castle"] .shelf__gem--bl {
+  bottom: 0.35rem;
+  left: 1rem;
+  animation-delay: -1.4s;
+}
+
+html[data-style="castle"] .shelf__gem--br {
+  bottom: 0.4rem;
+  right: 0.85rem;
+  width: 0.75rem;
+  height: 0.62rem;
+  animation-delay: -2s;
+}
+
+@keyframes gem-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+    box-shadow:
+      0 0 8px var(--glow),
+      0 0 18px var(--glow-soft),
+      inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  50% {
+    filter: brightness(1.28);
+    box-shadow:
+      0 0 14px var(--glow),
+      0 0 28px rgba(78, 162, 255, 0.7),
+      inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  }
+}
+
+html[data-style="castle"] .shelf__slot::after {
+  background:
+    linear-gradient(180deg, rgba(78, 162, 255, 0.28), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 32%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 17px,
+      rgba(0, 0, 0, 0.22) 17px 19px
+    ),
+    linear-gradient(180deg, var(--stone-light) 0 16%, var(--stone-mid) 42%, var(--stone-deep));
+  box-shadow:
+    0 1px 0 rgba(78, 162, 255, 0.38),
+    0 6px 10px rgba(0, 0, 0, 0.42),
+    0 8px 18px rgba(78, 162, 255, 0.14);
+}
+
+html[data-style="castle"] .book-spine:hover,
+html[data-style="castle"] .book-spine:focus-visible,
+html[data-style="castle"] .book-spine:active {
+  box-shadow:
+    10px 18px 22px rgba(0, 0, 0, 0.45),
+    0 0 16px var(--glow-soft);
+}
+
+html[data-style="castle"] .book-spine:focus-visible {
+  outline-color: var(--glow);
+}
+
+html[data-style="castle"] .review {
+  padding: 1.25rem 1.4rem 1.6rem;
+  background:
+    linear-gradient(180deg, rgba(78, 162, 255, 0.08), transparent 48%),
+    rgba(14, 16, 20, 0.86);
+  border: 1px solid rgba(78, 162, 255, 0.28);
+  box-shadow: 0 1px 16px rgba(78, 162, 255, 0.12);
+}
+
+html[data-style="castle"] .review-cover {
+  box-shadow:
+    4px 8px 16px rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(78, 162, 255, 0.12);
+}
+
+html[data-style="castle"] .review-tags a {
+  background: rgba(20, 23, 28, 0.55);
+}
+
+html[data-style="castle"] .review-tags a:hover {
+  border-color: var(--glow);
+  box-shadow: 0 0 10px var(--glow-soft);
+}
+
+html[data-style="castle"] .rating__star {
+  background: var(--stone-light);
+}
+
+html[data-style="castle"] .rating__star--full {
+  background: #d4a017;
+}
+
+html[data-style="castle"] .rating__star--half {
+  background: linear-gradient(90deg, #d4a017 50%, var(--stone-light) 50%);
+}
+
+html[data-style="castle"] .pullquote {
+  border-left: 3px solid var(--glow);
+  box-shadow: -4px 0 12px var(--glow-soft);
+}
+
+@media (max-width: 40rem) {
+  html[data-style="castle"] .shelf__alcove {
+    padding: 0.9rem 0.7rem 0.85rem;
+  }
+
+  html[data-style="castle"] .shelf__gem--ml,
+  html[data-style="castle"] .shelf__gem--mr {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-style="castle"] .shelf__gem {
+    animation: none;
+  }
+
+  html[data-style="castle"] .book-spine:hover,
+  html[data-style="castle"] .book-spine:focus-visible,
+  html[data-style="castle"] .book-spine:active {
+    box-shadow: 2px 0 3px rgba(0, 0, 0, 0.25);
+  }
+}

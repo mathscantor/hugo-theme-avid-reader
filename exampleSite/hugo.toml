@@ -1,0 +1,52 @@
+baseURL = "https://example.org/book-reviews"
+title = "Avid Reader"
+locale = "en-US"
+theme = "hugo-theme-avid-reader"
+
+[pagination]
+  pagerSize = 8
+
+[taxonomies]
+  tag = "tags"
+
+[params]
+  description = "A personal bookshelf of book reviews."
+  defaultStyle = "parchment"
+
+[menus]
+  [[menus.main]]
+    name = "Reviews"
+    pageRef = "/"
+    weight = 10
+  [[menus.main]]
+    name = "Tags"
+    pageRef = "/tags"
+    weight = 20
+  [[menus.main]]
+    name = "Stats"
+    pageRef = "/stats"
+    weight = 25
+  [[menus.main]]
+    name = "Styles"
+    identifier = "styles"
+    weight = 30
+  [[menus.main]]
+    name = "Castle"
+    parent = "styles"
+    params = { style = "castle" }
+    weight = 10
+  [[menus.main]]
+    name = "Parchment"
+    parent = "styles"
+    params = { style = "parchment" }
+    weight = 20
+  [[menus.main]]
+    name = "Forest"
+    parent = "styles"
+    params = { style = "forest" }
+    weight = 30
+  [[menus.main]]
+    name = "Dog"
+    parent = "styles"
+    params = { style = "dog" }
+    weight = 40

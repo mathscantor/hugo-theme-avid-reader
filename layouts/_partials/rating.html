@@ -1,0 +1,21 @@
+{{- $raw := . -}}
+{{- if reflect.IsMap . -}}
+  {{- $raw = index . "value" -}}
+{{- end -}}
+{{- $value := float ($raw | default 0) -}}
+{{- if lt $value 0 -}}{{- $value = 0.0 -}}{{- end -}}
+{{- if gt $value 5 -}}{{- $value = 5.0 -}}{{- end -}}
+{{- $full := int (math.Floor $value) -}}
+{{- $frac := sub $value (float $full) -}}
+{{- $half := ge $frac 0.5 -}}
+<div class="rating" role="img" aria-label="{{ lang.FormatNumber 1 $value }} out of 5 stars">
+  {{- range seq 5 -}}
+    {{- $state := "empty" -}}
+    {{- if le . $full -}}
+      {{- $state = "full" -}}
+    {{- else if and (eq . (add $full 1)) $half -}}
+      {{- $state = "half" -}}
+    {{- end -}}
+    <span class="rating__star rating__star--{{ $state }}" aria-hidden="true"></span>
+  {{- end -}}
+</div>

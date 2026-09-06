@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{{ or site.Language.Locale `en` }}" dir="{{ or site.Language.Direction `ltr` }}" data-style="{{ or site.Params.defaultStyle `parchment` }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  <div class="falling-leaves" aria-hidden="true">
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+    <span class="falling-leaves__leaf"></span>
+  </div>
+  <div class="dog-marks" aria-hidden="true">
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+    <span class="dog-marks__dog"></span>
+  </div>
+  {{ partial "header.html" . }}
+  <main id="main">
+    {{ block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+</body>
+</html>

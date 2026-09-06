@@ -1,0 +1,13 @@
+{
+  "name": "hugo-theme-avid-reader",
+  "private": true,
+  "scripts": {
+    "hugo": "hugo --source exampleSite --themesDir ../..",
+    "index": "pagefind --site exampleSite/public --output-path exampleSite/static/pagefind",
+    "build": "npm run hugo && npm run index",
+    "preview": "npm run build && hugo server --source exampleSite --themesDir ../.."
+  },
+  "devDependencies": {
+    "pagefind": "^1.4.0"
+  }
+}

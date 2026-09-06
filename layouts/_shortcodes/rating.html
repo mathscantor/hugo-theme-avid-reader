@@ -1,0 +1,11 @@
+{{- $value := "" -}}
+{{- if .IsNamedParams -}}
+  {{- $value = .Get "value" -}}
+{{- else -}}
+  {{- $value = .Get 0 -}}
+{{- end -}}
+{{- if not $value -}}
+  {{- errorf "The %q shortcode requires a rating value: see %s" .Name .Position -}}
+{{- else -}}
+  {{- partial "rating.html" $value -}}
+{{- end -}}

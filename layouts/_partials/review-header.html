@@ -1,0 +1,41 @@
+<header class="review-header">
+  {{- $cover := .Params.coverImage | default "cover.svg" -}}
+  {{- $coverAlt := .Title -}}
+  {{- with .Params.bookAuthor -}}
+    {{- $coverAlt = printf "%s by %s" $.Title . -}}
+  {{- end -}}
+  {{- with .Resources.Get $cover -}}
+    <img class="review-cover" src="{{ .RelPermalink }}" alt="{{ $coverAlt }}" width="240" height="360">
+  {{- else -}}
+    {{- if .Params.coverImage -}}
+      {{- warnf "coverImage %q not found in %s" .Params.coverImage .Path -}}
+    {{- end -}}
+  {{- end -}}
+  <div class="review-header__meta">
+    <h1 data-pagefind-meta="title">{{ .Title }}</h1>
+    {{- with .Params.bookAuthor -}}
+      <p class="review-header__author" data-pagefind-meta="author">{{ . }}</p>
+    {{- end -}}
+    {{- with .Params.rating -}}
+      {{ partial "rating.html" . }}
+    {{- end -}}
+    {{- $reread := partial "reread-value.html" .Params.reread -}}
+    {{- $rereadLabel := "No" -}}
+    {{- if eq $reread "yes" -}}
+      {{- $rereadLabel = "Yes" -}}
+    {{- else if eq $reread "maybe" -}}
+      {{- $rereadLabel = "Maybe" -}}
+    {{- end -}}
+    <p class="review-header__reread">Would reread: {{ $rereadLabel }}</p>
+    <p class="review-header__date">
+      <time data-pagefind-meta="date[datetime]" datetime="{{ .Date.Format `2006-01-02` }}">Reviewed {{ .Date.Format "2 January 2006" }}</time>
+    </p>
+    {{- with .GetTerms "tags" -}}
+      <ul class="review-tags">
+        {{- range . -}}
+          <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+        {{- end -}}
+      </ul>
+    {{- end -}}
+  </div>
+</header>

@@ -1,0 +1,56 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+{{ with or .Description .Summary site.Params.description }}
+  <meta name="description" content="{{ . | plainify | htmlUnescape }}">
+{{ end }}
+<link rel="canonical" href="{{ .Permalink }}">
+<script>
+  (function () {
+    try {
+      var style = localStorage.getItem("avid-reader-style");
+      if (style === "castle" || style === "parchment" || style === "forest" || style === "dog") {
+        document.documentElement.setAttribute("data-style", style);
+      }
+    } catch (e) {}
+  })();
+</script>
+{{ with resources.Get "svg/cobble.svg" }}
+  {{ $cobble := . | minify | fingerprint }}
+  <style>:root { --cobble-wall: url("{{ $cobble.RelPermalink }}"); }</style>
+{{ end }}
+{{ with resources.Get "svg/oak-grain.svg" }}
+  {{ $oak := . | minify | fingerprint }}
+  <style>:root { --oak-grain: url("{{ $oak.RelPermalink }}"); }</style>
+{{ end }}
+{{- range $i, $leaf := resources.Match "img/leaves/*.png" -}}
+  {{- $pub := $leaf | fingerprint -}}
+  <style>:root { --forest-leaf-{{ add $i 1 }}: url("{{ $pub.RelPermalink }}"); }</style>
+{{- end -}}
+{{ with resources.Get "img/dog.png" }}
+  {{ $dog := . | fingerprint }}
+  <style>:root { --dog-mark: url("{{ $dog.RelPermalink }}"); }</style>
+{{ end }}
+{{- range (slice "css/style-parchment.css" "css/style-castle.css" "css/style-forest.css" "css/style-dog.css") -}}
+  {{- $path := . -}}
+  {{- with resources.Get $path -}}
+    {{- $sheet := resources.Copy $path . -}}
+    {{- $published := $sheet.RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+{{ with resources.Get "css/main.css" }}
+  {{ $css := . | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous">
+{{ end }}
+{{ with resources.Get "js/style-switcher.js" }}
+  {{ $js := . | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}
+{{ with resources.Get "js/pagefind-search.js" }}
+  {{ $search := . | minify | fingerprint }}
+  <script src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}
+{{ with resources.Get "js/shelf-pager.js" }}
+  {{ $pager := . | minify | fingerprint }}
+  <script src="{{ $pager.RelPermalink }}" integrity="{{ $pager.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}
