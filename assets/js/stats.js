@@ -444,7 +444,7 @@
 
     wrap.appendChild(legend);
     mount.appendChild(wrap);
-    mount.appendChild(hiddenTable(caption, headers, rows));
+    // mount.appendChild(hiddenTable(caption, headers, rows));
   }
 
   function drawPie(list) {
@@ -697,7 +697,7 @@
     appendAxisLabels(svg, left, top, plotW, plotH, "Period", "No. of Books", rotateLabels);
 
     barsMount.appendChild(svg);
-    barsMount.appendChild(hiddenTable("Books reviewed", ["Period", "Reviews"], rows));
+    // barsMount.appendChild(hiddenTable("Books reviewed", ["Period", "Reviews"], rows));
   }
 
   function drawLine(list, window) {
@@ -827,7 +827,7 @@
     appendAxisLabels(svg, left, top, plotW, plotH, "Period", "No. of Pages", rotateLabels);
 
     lineMount.appendChild(svg);
-    lineMount.appendChild(hiddenTable("Pages read", ["Period", "Pages"], rows));
+    // lineMount.appendChild(hiddenTable("Pages read", ["Period", "Pages"], rows));
   }
 
   function drawRatings(list) {
@@ -946,7 +946,7 @@
     appendAxisLabels(svg, left, top, plotW, plotH, "Rating Score", "No. of Books", rotateLabels);
 
     ratingsMount.appendChild(svg);
-    ratingsMount.appendChild(hiddenTable("Rating distribution", ["Rating", "Reviews"], rows));
+    // ratingsMount.appendChild(hiddenTable("Rating distribution", ["Rating", "Reviews"], rows));
   }
 
   function formatPages(count) {
