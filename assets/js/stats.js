@@ -284,6 +284,27 @@
     return table;
   }
 
+  function appendScrollableChart(mount, svg) {
+    var scroll = document.createElement("div");
+    scroll.className = "stats__chart-scroll";
+    scroll.appendChild(svg);
+    mount.appendChild(scroll);
+
+    var yGroup = svg.querySelector(".stats__sticky-y");
+    var xLabel = svg.querySelector(".stats__sticky-x");
+    function pin() {
+      var x = scroll.scrollLeft;
+      if (yGroup) {
+        yGroup.setAttribute("transform", "translate(" + x + ",0)");
+      }
+      if (xLabel) {
+        xLabel.setAttribute("x", String(x + scroll.clientWidth / 2));
+      }
+    }
+    scroll.addEventListener("scroll", pin, { passive: true });
+    pin();
+  }
+
   function genreSlices(list) {
     var counts = {};
     for (var i = 0; i < list.length; i += 1) {
@@ -561,7 +582,7 @@
     };
   }
 
-  function appendAxisLabels(svg, left, top, plotW, plotH, xTitle, yTitle, rotateLabels) {
+  function appendYAxisLabel(parent, top, plotH, yTitle) {
     var yLabelX = 14;
     var yLabelY = top + plotH / 2;
     var yLabel = svgEl("text", {
@@ -572,16 +593,60 @@
       transform: "rotate(-90 " + yLabelX + " " + yLabelY + ")",
     });
     yLabel.textContent = yTitle;
-    svg.appendChild(yLabel);
+    parent.appendChild(yLabel);
+  }
 
+  function appendXAxisLabel(parent, left, top, plotW, plotH, xTitle, rotateLabels, extraClass) {
     var xLabel = svgEl("text", {
       x: String(left + plotW / 2),
       y: String(top + plotH + (rotateLabels ? 70 : 36)),
-      class: "stats__axis-label",
+      class: extraClass ? "stats__axis-label " + extraClass : "stats__axis-label",
       "text-anchor": "middle",
     });
     xLabel.textContent = xTitle;
-    svg.appendChild(xLabel);
+    parent.appendChild(xLabel);
+  }
+
+  function appendAxisLabels(svg, left, top, plotW, plotH, xTitle, yTitle, rotateLabels) {
+    appendYAxisLabel(svg, top, plotH, yTitle);
+    appendXAxisLabel(svg, left, top, plotW, plotH, xTitle, rotateLabels);
+  }
+
+  function createStickyYAxis(left, top, plotH, height, max, yTitle) {
+    var g = svgEl("g", { class: "stats__sticky-y" });
+    g.appendChild(
+      svgEl("rect", {
+        x: "0",
+        y: "0",
+        width: String(left),
+        height: String(height),
+        class: "stats__sticky-y-bg",
+      })
+    );
+    g.appendChild(
+      svgEl("line", {
+        x1: String(left),
+        y1: String(top),
+        x2: String(left),
+        y2: String(top + plotH),
+        class: "stats__axis",
+      })
+    );
+    var ticks = max <= 4 ? max : 4;
+    for (var n = 0; n <= ticks; n += 1) {
+      var value = Math.round((max * n) / ticks);
+      var y = top + plotH - (value / max) * plotH;
+      var tick = svgEl("text", {
+        x: String(left - 8),
+        y: String(y + 4),
+        class: "stats__tick",
+        "text-anchor": "end",
+      });
+      tick.textContent = String(value);
+      g.appendChild(tick);
+    }
+    appendYAxisLabel(g, top, plotH, yTitle);
+    return g;
   }
 
   function drawBars(list, window) {
@@ -625,7 +690,7 @@
 
     var svg = svgEl("svg", {
       viewBox: "0 0 " + width + " " + height,
-      width: "100%",
+      width: String(width),
       height: String(height),
       class: "stats__bars",
       role: "img",
@@ -633,36 +698,15 @@
       preserveAspectRatio: "xMidYMid meet",
     });
 
-    var axis = svgEl("line", {
-      x1: String(left),
-      y1: String(top),
-      x2: String(left),
-      y2: String(top + plotH),
-      class: "stats__axis",
-    });
-    var base = svgEl("line", {
-      x1: String(left),
-      y1: String(top + plotH),
-      x2: String(left + plotW),
-      y2: String(top + plotH),
-      class: "stats__axis",
-    });
-    svg.appendChild(axis);
-    svg.appendChild(base);
-
-    var ticks = max <= 4 ? max : 4;
-    for (var n = 0; n <= ticks; n += 1) {
-      var value = Math.round((max * n) / ticks);
-      var y = top + plotH - (value / max) * plotH;
-      var tick = svgEl("text", {
-        x: String(left - 8),
-        y: String(y + 4),
-        class: "stats__tick",
-        "text-anchor": "end",
-      });
-      tick.textContent = String(value);
-      svg.appendChild(tick);
-    }
+    svg.appendChild(
+      svgEl("line", {
+        x1: String(left),
+        y1: String(top + plotH),
+        x2: String(left + plotW),
+        y2: String(top + plotH),
+        class: "stats__axis",
+      })
+    );
 
     for (var b = 0; b < buckets.length; b += 1) {
       var x = left + b * (barW + gap) + gap / 2;
@@ -694,9 +738,10 @@
       }
     }
 
-    appendAxisLabels(svg, left, top, plotW, plotH, "Period", "No. of Books", rotateLabels);
+    appendXAxisLabel(svg, left, top, plotW, plotH, "Period", rotateLabels, "stats__sticky-x");
+    svg.appendChild(createStickyYAxis(left, top, plotH, height, max, "No. of Books"));
 
-    barsMount.appendChild(svg);
+    appendScrollableChart(barsMount, svg);
     // barsMount.appendChild(hiddenTable("Books reviewed", ["Period", "Reviews"], rows));
   }
 
@@ -740,7 +785,7 @@
 
     var svg = svgEl("svg", {
       viewBox: "0 0 " + width + " " + height,
-      width: "100%",
+      width: String(width),
       height: String(height),
       class: "stats__lines",
       role: "img",
@@ -751,35 +796,12 @@
     svg.appendChild(
       svgEl("line", {
         x1: String(left),
-        y1: String(top),
-        x2: String(left),
-        y2: String(top + plotH),
-        class: "stats__axis",
-      })
-    );
-    svg.appendChild(
-      svgEl("line", {
-        x1: String(left),
         y1: String(top + plotH),
         x2: String(left + plotW),
         y2: String(top + plotH),
         class: "stats__axis",
       })
     );
-
-    var ticks = max <= 4 ? max : 4;
-    for (var n = 0; n <= ticks; n += 1) {
-      var value = Math.round((max * n) / ticks);
-      var y = top + plotH - (value / max) * plotH;
-      var tick = svgEl("text", {
-        x: String(left - 8),
-        y: String(y + 4),
-        class: "stats__tick",
-        "text-anchor": "end",
-      });
-      tick.textContent = String(value);
-      svg.appendChild(tick);
-    }
 
     var points = [];
     for (var b = 0; b < buckets.length; b += 1) {
@@ -824,9 +846,10 @@
       }
     }
 
-    appendAxisLabels(svg, left, top, plotW, plotH, "Period", "No. of Pages", rotateLabels);
+    appendXAxisLabel(svg, left, top, plotW, plotH, "Period", rotateLabels, "stats__sticky-x");
+    svg.appendChild(createStickyYAxis(left, top, plotH, height, max, "No. of Pages"));
 
-    lineMount.appendChild(svg);
+    appendScrollableChart(lineMount, svg);
     // lineMount.appendChild(hiddenTable("Pages read", ["Period", "Pages"], rows));
   }
 

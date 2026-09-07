@@ -784,6 +784,7 @@ main {
 }
 
 .stats__chart {
+  min-width: 0;
   margin: 0;
   padding: 1rem 1.1rem 1.2rem;
   border: 1px solid var(--rule);
@@ -798,7 +799,33 @@ main {
 
 .stats__chart-body {
   position: relative;
+  min-width: 0;
   min-height: 14.4rem;
+}
+
+.stats__chart-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  scrollbar-color: var(--ink-muted) transparent;
+  scrollbar-width: thin;
+}
+
+.stats__chart-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.stats__chart-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stats__chart-scroll::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border-radius: 999px;
+}
+
+.stats__sticky-y-bg {
+  fill: var(--paper);
 }
 
 .stats__empty {
