@@ -166,6 +166,7 @@
     }
     parsed.push({
       title: item.title ? String(item.title) : "Untitled",
+      url: item.url ? String(item.url) : "",
       date: date,
       tags: tags,
       pages: pages,
@@ -335,9 +336,12 @@
   }
 
   function rereadSlices(list) {
-    var counts = { yes: 0, maybe: 0, no: 0 };
+    var groups = { yes: [], maybe: [], no: [] };
     for (var i = 0; i < list.length; i += 1) {
-      counts[list[i].reread] += 1;
+      groups[list[i].reread].push({
+        title: list[i].title,
+        url: list[i].url || "",
+      });
     }
     var order = [
       { key: "yes", name: "Yes", color: 1 },
@@ -348,12 +352,62 @@
     var total = 0;
     for (var o = 0; o < order.length; o += 1) {
       var item = order[o];
-      if (counts[item.key] > 0) {
-        slices.push({ name: item.name, count: counts[item.key], color: item.color });
-        total += counts[item.key];
+      var books = groups[item.key];
+      if (books.length > 0) {
+        books.sort(function (a, b) {
+          return a.title.localeCompare(b.title);
+        });
+        slices.push({
+          name: item.name,
+          key: item.key,
+          count: books.length,
+          color: item.color,
+          books: books,
+        });
+        total += books.length;
       }
     }
     return { slices: slices, total: total };
+  }
+
+  function appendRereadBooks(li, books) {
+    var list = document.createElement("ul");
+    list.className = "stats__reread-books";
+    for (var i = 0; i < books.length; i += 1) {
+      var item = document.createElement("li");
+      if (books[i].url) {
+        var link = document.createElement("a");
+        link.href = books[i].url;
+        link.textContent = books[i].title;
+        item.appendChild(link);
+      } else {
+        item.textContent = books[i].title;
+      }
+      list.appendChild(item);
+    }
+    li.appendChild(list);
+  }
+
+  function bindRereadSliceHover(mount) {
+    var parts = mount.querySelectorAll(".stats__slice[data-reread-key]");
+    for (var i = 0; i < parts.length; i += 1) {
+      parts[i].addEventListener("mouseenter", function () {
+        var row = mount.querySelector(
+          '.stats__legend-item[data-reread-key="' + this.getAttribute("data-reread-key") + '"]'
+        );
+        if (row) {
+          row.classList.add("is-open");
+        }
+      });
+      parts[i].addEventListener("mouseleave", function () {
+        var row = mount.querySelector(
+          '.stats__legend-item[data-reread-key="' + this.getAttribute("data-reread-key") + '"]'
+        );
+        if (row) {
+          row.classList.remove("is-open");
+        }
+      });
+    }
   }
 
   function sliceColor(slice, index) {
@@ -391,13 +445,17 @@
     });
 
     if (data.slices.length === 1) {
-      var only = svgEl("circle", {
+      var onlyAttrs = {
         cx: String(cx),
         cy: String(cy),
         r: String(radius),
         class: "stats__slice",
         style: "fill: var(--stats-cat-" + sliceColor(data.slices[0], 0) + ")",
-      });
+      };
+      if (data.slices[0].key) {
+        onlyAttrs["data-reread-key"] = data.slices[0].key;
+      }
+      var only = svgEl("circle", onlyAttrs);
       svg.appendChild(only);
     } else {
       var angle = -Math.PI / 2;
@@ -407,7 +465,7 @@
         var start = polar(cx, cy, radius, angle);
         var end = polar(cx, cy, radius, next);
         var large = sweep > Math.PI ? 1 : 0;
-        var path = svgEl("path", {
+        var pathAttrs = {
           d:
             "M " +
             cx +
@@ -430,7 +488,11 @@
             " Z",
           class: "stats__slice",
           style: "fill: var(--stats-cat-" + sliceColor(data.slices[i], i) + ")",
-        });
+        };
+        if (data.slices[i].key) {
+          pathAttrs["data-reread-key"] = data.slices[i].key;
+        }
+        var path = svgEl("path", pathAttrs);
         svg.appendChild(path);
         angle = next;
       }
@@ -447,6 +509,10 @@
       var slice = data.slices[s];
       var pct = Math.round((slice.count / data.total) * 100);
       var li = document.createElement("li");
+      li.className = "stats__legend-item";
+      if (slice.key) {
+        li.setAttribute("data-reread-key", slice.key);
+      }
       var swatch = document.createElement("span");
       swatch.className = "stats__swatch";
       swatch.style.background = "var(--stats-cat-" + sliceColor(slice, s) + ")";
@@ -459,12 +525,18 @@
       li.appendChild(swatch);
       li.appendChild(name);
       li.appendChild(meta);
+      if (slice.books && slice.books.length) {
+        li.className += " stats__legend-item--books";
+        li.tabIndex = 0;
+        appendRereadBooks(li, slice.books);
+      }
       legend.appendChild(li);
       rows.push([slice.name, String(slice.count), pct + "%"]);
     }
 
     wrap.appendChild(legend);
     mount.appendChild(wrap);
+    bindRereadSliceHover(mount);
     // mount.appendChild(hiddenTable(caption, headers, rows));
   }
 

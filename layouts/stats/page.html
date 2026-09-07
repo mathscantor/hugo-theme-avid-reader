@@ -16,7 +16,7 @@
     {{- if lt $rating 0 -}}{{- $rating = 0.0 -}}{{- end -}}
     {{- if gt $rating 5 -}}{{- $rating = 5.0 -}}{{- end -}}
     {{- $reread := partial "reread-value.html" .Params.reread -}}
-    {{- $reviews = $reviews | append (dict "title" .Title "date" (.Date.Format "2006-01-02") "tags" $tags "pages" $pageCount "rating" $rating "reread" $reread) -}}
+    {{- $reviews = $reviews | append (dict "title" .Title "date" (.Date.Format "2006-01-02") "url" .RelPermalink "tags" $tags "pages" $pageCount "rating" $rating "reread" $reread) -}}
   {{- end -}}
   <section class="stats">
     <header class="stats__intro">

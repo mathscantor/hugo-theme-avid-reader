@@ -860,6 +860,61 @@ main {
   padding: 0.28rem 0;
 }
 
+.stats__legend-item--books {
+  position: relative;
+  cursor: pointer;
+}
+
+.stats__slice[data-reread-key] {
+  cursor: pointer;
+}
+
+.stats__reread-books {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: calc(100% - 0.05rem);
+  z-index: 6;
+  min-width: 12rem;
+  max-width: 18rem;
+  max-height: 14rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.4rem 0;
+  list-style: none;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.stats__legend-item--books:hover .stats__reread-books,
+.stats__legend-item--books:focus-within .stats__reread-books,
+.stats__legend-item--books.is-open .stats__reread-books {
+  display: block;
+}
+
+.stats__reread-books li {
+  display: block;
+  padding: 0;
+}
+
+.stats__reread-books a,
+.stats__reread-books li {
+  color: var(--ink-muted);
+}
+
+.stats__reread-books a {
+  display: block;
+  padding: 0.3rem 0.85rem;
+  text-decoration: none;
+}
+
+.stats__reread-books a:hover,
+.stats__reread-books a:focus-visible {
+  color: var(--ink);
+}
+
 .stats__swatch {
   width: 0.9rem;
   height: 0.9rem;
